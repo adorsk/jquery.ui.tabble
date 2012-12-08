@@ -40,18 +40,47 @@
       this.tabs = {};
       $.each(this.tabCells, function(pos, tabCell){
         $(tabCell).addClass('ui-tabble-tabcell '+ pos);
+
+        // @TODO
+        // Break this out
+        // into a set tab function here.
+        // Sensing widths/heights, or setting defaults.
+        // Setting lefts/rights.
         var $tab = $(tabCell).find('> div');
         $tab.addClass("ui-tabble-tab " + pos);
         $tab.attr('pos', pos);
         that.tabs[pos] = $tab;
 
-        // Add corner class to header.
-        $h3 = $tab.find('> h3').eq(0);
+        // Get the cell.
+        $cell = $tab.parent();
+
+        // Get header and body
+        $h = $tab.find('> h3').eq(0);
+        $b = $tab.find('> div').eq(0);
+
+        // Set corners and initial positions and sizes.
+        var hWidth = $h.outerHeight(true);
         if (pos == 'left' || pos == 'right'){
-          $h3.addClass('ui-corner-top');
+          $cell.width(hWidth);
+          $h.addClass('ui-corner-top');
+          $h.css('left', 0);
+          if (pos == 'left'){
+            $b.css('left', hWidth);
+          }
+          else if (pos == 'right'){
+            $b.css('left', 0);
+          }
         }
-        else{
-          $h3.addClass('ui-corner-' + pos);
+        else if (pos == 'top' || pos == 'bottom'){
+          $cell.height(hWidth);
+          $h.addClass('ui-corner-' + pos);
+          $h.css('top', 0);
+          if (pos == 'top'){
+            $b.css('top', hWidth);
+          }
+          else if (pos == 'bottom'){
+            $b.css('top', 0);
+          }
         }
       });
 
@@ -91,35 +120,41 @@
 
       var pos = opts.pos;
       var $cell = $(this.tabCells[pos]);
+      var $tab = $(this.tabs[pos]);
+      var $b = $tab.find('> div').eq(0);
+      var $h = $tab.find('> h3').eq(0);
 
       if ($cell.hasClass('expanding')){
         return;
       }
 
       var dim;
+      var bWidth;
       if (pos == 'left' || pos == 'right'){
         dim = 'width';
+        bWidth = $b.outerWidth(true);
       }
       else if (pos == 'bottom' || pos == 'top'){
         dim = 'height';
+        bWidth = $b.outerHeight(true);
       }
+      var hWidth = $h.outerHeight(true);
 
       var expanded = $cell.hasClass('expanded');
 
-      var dMax = parseInt($cell.css('max' + this._capitalize(dim)), 10);
-      var dMin = parseInt($cell.css('min' + this._capitalize(dim)), 10);
-      var delta = dMax - dMin;
-      var targetDim;
+      var fullWidth = hWidth + bWidth;
+      var targetWidth;
+      var delta = bWidth;
       if (expanded){
         delta = -1 * delta;
-        targetDim = dMin;
+        targetWidth = hWidth;
       }
       else{
-        targetDim = dMax;
+        targetWidth = fullWidth;
       }
 
       var cell_a_opts = {};
-      cell_a_opts[dim] = targetDim;
+      cell_a_opts[dim] = targetWidth;
       deferreds.push($cell.animate(
           cell_a_opts,
           {

@@ -60,14 +60,9 @@
 
 .ui-tabble-tabcell.left, .ui-tabble-tabcell.right{
   width: @tabble_tab_header_w;
-  min-width: @tabble_tab_header_w;
-  max-width: @tabble_tab_header_w + @tabble_tab_body_w;
 }
-
 .ui-tabble-tabcell.top, .ui-tabble-tabcell.bottom{
   height: @tabble_tab_header_w;
-  min-height: @tabble_tab_header_w;
-  max-height: @tabble_tab_header_w + @tabble_tab_body_w;
 }
 
 .ui-tabble-tab {
@@ -100,8 +95,6 @@
 }
 
 .ui-tabble-tab.left, .ui-tabble-tab.right {
-  width: @tabble_tab_header_w + @tabble_tab_body_w;
-
   > div {
     width: @tabble_tab_body_w;
     top: 0;
@@ -156,8 +149,6 @@
 }
 
 .ui-tabble-tab.top, .ui-tabble-tab.bottom{
-  height: @tabble_tab_header_w + @tabble_tab_body_w;
-
   > h3 {
     position: absolute;
     height: @tabble_tab_header_w;
