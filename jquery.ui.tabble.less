@@ -33,10 +33,12 @@
 
 .ui-tabble {
 
+  border-spacing: 0;
+  border-collapse: collapse;
+
   > tbody > tr, > tr{
     > td {
       position: relative;
-      border: thin solid black;
       width: 0;
       height: 0;
     }
@@ -50,6 +52,9 @@
 .ui-tabble-tabcell.center{
   width: auto;
   height: auto;
+  border-style: solid;
+  border-color: @tabble_tab_bgcolor;
+  border-width: thin;
 }
 
 .ui-tabble-tabcell.left, .ui-tabble-tabcell.right{
@@ -83,6 +88,9 @@
 
   & > div {
     position: absolute;
+    border-style: solid;
+    border-color: @tabble_tab_bgcolor;
+    border-width: thin;
   }
   
 }
@@ -92,6 +100,8 @@
 
   > div {
     width: @tabble_tab_body_w;
+    top: 0;
+    bottom: 0;
   }
 }
 
@@ -114,6 +124,7 @@
 
   > div {
     left: @tabble_tab_header_w;
+    right: 0;
   }
 }
 

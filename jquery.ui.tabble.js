@@ -44,6 +44,15 @@
         $tab.addClass("ui-tabble-tab " + pos);
         $tab.attr('pos', pos);
         that.tabs[pos] = $tab;
+
+        // Add corner class to header.
+        $h3 = $tab.find('> h3').eq(0);
+        if (pos == 'left' || pos == 'right'){
+          $h3.addClass('ui-corner-top');
+        }
+        else{
+          $h3.addClass('ui-corner-' + pos);
+        }
       });
 
       // Assign events to tab headers.
@@ -98,12 +107,17 @@
       var dMax = parseInt($cell.css('max' + this._capitalize(dim)), 10);
       var dMin = parseInt($cell.css('min' + this._capitalize(dim)), 10);
       var delta = dMax - dMin;
+      var targetDim;
       if (expanded){
         delta = -1 * delta;
+        targetDim = dMin;
+      }
+      else{
+        targetDim = dMax;
       }
 
       var cell_a_opts = {};
-      cell_a_opts[dim] = parseInt($cell.css(dim),10) + delta;
+      cell_a_opts[dim] = targetDim;
       $cell.animate(
           cell_a_opts,
           {
