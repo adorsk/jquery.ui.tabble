@@ -139,19 +139,14 @@
       if (pos == 'right' || pos == 'bottom'){
         var $tab = $cell.find('> div').eq(0);
         var $h3 = $tab.find('> h3').eq(0);
-        var $body = $tab.find('> div').eq(0);
         var h3_a_opts;
-        var body_a_opts;
         if (pos == 'right'){
           h3_a_opts = {'left': parseInt($h3.css('left'),10) + delta};
-          body_a_opts = {'left': parseInt($body.css('left'),10) + delta};
         }
         else if (pos == 'bottom'){
           h3_a_opts = {'top': parseInt($h3.css('top'),10) + delta};
-          body_a_opts = {'top': parseInt($body.css('top'),10) + delta};
         }
         $h3.animate(h3_a_opts);
-        $body.animate(body_a_opts);
       }
 
       if (this.options.stretchTable){

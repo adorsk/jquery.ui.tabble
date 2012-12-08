@@ -79,6 +79,7 @@
 
   & > h3 {
     position: absolute;
+    z-index: 2;
     top: 0;
     left: 0;
     height: @tabble_tab_header_w;
@@ -87,6 +88,7 @@
   }
 
   & > div {
+    z-index: 1;
     position: absolute;
     border-style: solid;
     border-color: @tabble_tab_bgcolor;
@@ -95,7 +97,7 @@
   
 }
 
-.ui-tabble-tab.left, ui-tabble-tab.right {
+.ui-tabble-tab.left, .ui-tabble-tab.right {
   width: @tabble_tab_header_w + @tabble_tab_body_w;
 
   > div {
@@ -107,6 +109,7 @@
 
 .ui-tabble-tab.left {
   > h3 {
+    left: 0;
     @r: -90deg;
     @tx: -100%;
     @ty: 0;
@@ -124,12 +127,12 @@
 
   > div {
     left: @tabble_tab_header_w;
-    right: 0;
   }
 }
 
 .ui-tabble-tab.right {
   > h3 {
+    left: 0;
     @r: 90deg;
     @tx: 0%;
     @ty: -100%;
@@ -146,8 +149,7 @@
   }
 
   > div {
-    background-color: orange;
-    left: -@tabble_tab_body_w;
+    right: @tabble_tab_header_w;
   }
 }
 
@@ -162,7 +164,9 @@
     right: 0;
   }
   > div {
-    position: absolute;
+    height: @tabble_tab_body_w;
+    left: 0;
+    right: 0;
   }
 }
 
@@ -174,7 +178,7 @@
 
 .ui-tabble-tab.bottom {
   > div {
-    top: -@tabble_tab_body_w;
+    top: 0;
   }
 }
 
