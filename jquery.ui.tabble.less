@@ -1,6 +1,7 @@
 @tabble_table_h: 600px;
 @tabble_table_w: 600px;
-@tabble_tab_thickness: 40px;
+@tabble_tab_header_w: 40px;
+@tabble_tab_body_w: 200px;
 @tabble_tab_bw: 1px;
 @tabble_tab_r: 7px;
 @tabble_vtab_body_w: 200px;
@@ -36,28 +37,36 @@
     > td {
       position: relative;
       border: thin solid black;
-    }
-
-    &:nth-child(1), &:nth-child(3) {
-      > td {
-        height: @tabble_tab_thickness;
-      }
-    }
-
-    &:nth-child(2) {
-      > td {
-        &:nth-child(1), &:nth-child(3){
-          width: @tabble_tab_thickness;
-        }
-      }
+      width: 0;
+      height: 0;
     }
   }
 }
 
+.ui-tabble-tabcell{
+  overflow: hidden;
+}
+
+.ui-tabble-tabcell.center{
+  width: auto;
+  height: auto;
+}
+
+.ui-tabble-tabcell.left, .ui-tabble-tabcell.right{
+  width: @tabble_tab_header_w;
+  min-width: @tabble_tab_header_w;
+  max-width: @tabble_tab_header_w + @tabble_tab_body_w;
+}
+
+.ui-tabble-tabcell.top, .ui-tabble-tabcell.bottom{
+  height: @tabble_tab_header_w;
+  min-height: @tabble_tab_header_w;
+  max-height: @tabble_tab_header_w + @tabble_tab_body_w;
+}
 
 .ui-tabble-tab {
   position: absolute;
-  //overflow: hidden;
+  overflow: hidden;
   top: 0;
   right: 0;
   bottom: 0;
@@ -67,7 +76,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: @tabble_tab_thickness;
+    height: @tabble_tab_header_w;
     background-color: @tabble_tab_bgcolor;
     text-align: center;
   }
@@ -78,7 +87,15 @@
   
 }
 
-.ui-tabble-tab-left {
+.ui-tabble-tab.left, ui-tabble-tab.right {
+  width: @tabble_tab_header_w + @tabble_tab_body_w;
+
+  > div {
+    width: @tabble_tab_body_w;
+  }
+}
+
+.ui-tabble-tab.left {
   > h3 {
     @r: -90deg;
     @tx: -100%;
@@ -96,11 +113,11 @@
   }
 
   > div {
-    left: @tabble_tab_thickness;
+    left: @tabble_tab_header_w;
   }
 }
 
-.ui-tabble-tab-right {
+.ui-tabble-tab.right {
   > h3 {
     @r: 90deg;
     @tx: 0%;
@@ -118,15 +135,18 @@
   }
 
   > div {
-    left: @tabble_tab_thickness;
+    background-color: orange;
+    left: -@tabble_tab_body_w;
   }
 }
 
-.ui-tabble-tab-top, .ui-tabble-tab-bottom{
-  height: @tabble_tab_thickness;
+.ui-tabble-tab.top, .ui-tabble-tab.bottom{
+  height: @tabble_tab_header_w + @tabble_tab_body_w;
+
   > h3 {
     position: absolute;
-    height: @tabble_tab_thickness;
+    height: @tabble_tab_header_w;
+    top: 0;
     left: 0;
     right: 0;
   }
@@ -134,3 +154,16 @@
     position: absolute;
   }
 }
+
+.ui-tabble-tab.top {
+  > div {
+    bottom: 0;
+  }
+}
+
+.ui-tabble-tab.bottom {
+  > div {
+    top: -@tabble_tab_body_w;
+  }
+}
+
