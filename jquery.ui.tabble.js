@@ -12,7 +12,7 @@
       options = this.options;
 
       this.element.addClass(
-        "ui-tabble ui-widget ui-widget-content ui-corner-all"
+        "ui-tabble ui-widget ui-widget-content"
       );
 
       this._processTabble();
@@ -87,6 +87,8 @@
         resize: true
       }, opts);
 
+      var deferreds = [];
+
       var pos = opts.pos;
       var $cell = $(this.tabCells[pos]);
 
@@ -118,7 +120,7 @@
 
       var cell_a_opts = {};
       cell_a_opts[dim] = targetDim;
-      $cell.animate(
+      deferreds.push($cell.animate(
           cell_a_opts,
           {
             complete: function(){
@@ -134,7 +136,7 @@
               }
             }
           }
-      )
+      ));
 
       if (pos == 'right' || pos == 'bottom'){
         var $tab = $cell.find('> div').eq(0);
@@ -146,18 +148,17 @@
         else if (pos == 'bottom'){
           h3_a_opts = {'top': parseInt($h3.css('top'),10) + delta};
         }
-        $h3.animate(h3_a_opts);
+        deferreds.push($h3.animate(h3_a_opts));
       }
 
       if (this.options.stretchTable){
         var $table = $(this.element);
         var table_a_opts = {};
         table_a_opts[dim] = parseInt($table.css(dim),10) + delta;
-        $table.animate(table_a_opts);
+        deferreds.push($table.animate(table_a_opts));
       }
 
-      // @TODO: chain animations, to get deferred.
-      // return deferred.
+      return $.when.apply($, deferreds);
     },
 
     _capitalize: function(s){
