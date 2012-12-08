@@ -21,12 +21,10 @@
       var that = this;
 
       this.rows = this.element.find("> tbody > tr");
-      this.rows.addClass("ui-tabble-row");
 
       this.cells = [];
       $.each(this.rows, function(pos, row){
         var cells = $(row).find('> td');
-        cells.addClass("ui-tabble-cell");
         that.cells.push(cells);
       });
 
@@ -34,11 +32,14 @@
         top: this.cells[0][1],
         left: this.cells[1][0],
         right: this.cells[1][2],
-        bottom: this.cells[0][1],
+        bottom: this.cells[2][1],
       };
 
+      this.tabs = {};
       $.each(this.tabCells, function(pos, tabCell){
-        $(tabCell).addClass('ui-tabble-tabcell ui-tabble-tabcell-' + pos);
+        var $tab = $(tabCell).find('> div');
+        $tab.addClass("ui-tabble-tab ui-tabble-tab-" + pos);
+        that.tabs[pos] = $tab;
       });
 
       this._resize();
@@ -46,10 +47,13 @@
     },
 
     _resize: function(){
-      $.each(this.tabCells, function(pos, tabCell){
+      $.each(this.tabs, function(pos, tab){
         if (pos == 'left' || pos == 'right'){
-          $h3 = $(tabCell).find('> h3');
-          $h3.width($(tabCell).innerHeight());
+          $cell = $(tab).parent();
+          $h3 = $(tab).find('> h3');
+          console.log($cell);
+          console.log($cell.innerHeight());
+          $h3.width($cell.innerHeight());
         }
       });
     },
