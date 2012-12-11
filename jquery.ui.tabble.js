@@ -1,3 +1,6 @@
+ASFASDF
+@TODO! Need to set widths on first row for fixed-table layout.
+auto table layouts don't respect fixed widths...
 (function( $, undefined ) {
 
   $.widget( "ui.tabble", {
@@ -46,7 +49,11 @@
         // into a set tab function here.
         // Sensing widths/heights, or setting defaults.
         // Setting lefts/rights.
-        var $tab = $(tabCell).find('> div');
+        var $tab = $(tabCell).find('> div').eq(0);
+        if (! $tab){
+          return;
+        }
+
         $tab.addClass("ui-tabble-tab " + pos);
         $tab.attr('pos', pos);
         that.tabs[pos] = $tab;
@@ -64,12 +71,6 @@
           $cell.width(hWidth);
           $h.addClass('ui-corner-top');
           $h.css('left', 0);
-          if (pos == 'left'){
-            $b.css('left', hWidth);
-          }
-          else if (pos == 'right'){
-            $b.css('left', 0);
-          }
         }
         else if (pos == 'top' || pos == 'bottom'){
           $cell.height(hWidth);
@@ -93,10 +94,48 @@
         that.toggleTab({pos: pos});
 			})
 
-      this._resize();
+      this.resize();
     },
 
-    _resize: function(){
+    resize: function(){
+      var that = this;
+      // Resize cells.
+      $.each(this.tabCells, function(pos, cell){
+        if (pos == 'center'){
+          return;
+        }
+        var $cell = $(cell);
+        var targetWidth = 0;
+        var $tab = that.tabs[pos];
+        var $h;
+        var $b;
+        if ($tab){
+          $h = $tab.find(' > h3').eq(0);
+          $b = $tab.find(' > div').eq(0);
+        }
+        if ($h){
+          targetWidth += $h.outerHeight();
+        }
+        if ($cell.hasClass('expanded')){
+          if ($b){
+            if (pos == 'left' || pos == 'right'){
+              targetWidth += $b.outerWidth();
+            }
+            else if (pos == 'top' || pos == 'bottom'){
+              targetWidth += $b.outerHeight();
+            }
+          }
+        }
+
+        if (pos == 'left' || pos == 'right'){
+          $cell.width(targetWidth);
+        }
+        else if (pos == 'top' || pos == 'bottom'){
+          $cell.height(targetWidth);
+        }
+      });
+
+      // Resize vertical tabs.
       $.each(this.tabs, function(pos, tab){
         if (pos == 'left' || pos == 'right'){
           $cell = $(tab).parent();
@@ -112,9 +151,7 @@
 
     toggleTab: function(opts){
       var that = this;
-      opts = $.extend({
-        resize: true
-      }, opts);
+      opts = $.extend({}, opts);
 
       var deferreds = [];
 
@@ -165,9 +202,6 @@
               }
               else{
                 $cell.addClass('expanded')
-              }
-              if (opts.resize){
-                that._resize();
               }
             }
           }

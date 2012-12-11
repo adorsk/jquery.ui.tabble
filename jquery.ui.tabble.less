@@ -33,15 +33,15 @@
 
 .ui-tabble {
 
+  table-layout: fixed;
   border-spacing: 0;
   border-collapse: collapse;
   border: 0;
 
   > tbody > tr, > tr{
+
     > td {
       position: relative;
-      width: 0;
-      height: 0;
     }
   }
 }
@@ -56,13 +56,6 @@
   border-style: solid;
   border-color: @tabble_tab_bgcolor;
   border-width: thin;
-}
-
-.ui-tabble-tabcell.left, .ui-tabble-tabcell.right{
-  width: @tabble_tab_header_w;
-}
-.ui-tabble-tabcell.top, .ui-tabble-tabcell.bottom{
-  height: @tabble_tab_header_w;
 }
 
 .ui-tabble-tab {
@@ -121,7 +114,7 @@
   }
 
   > div {
-    left: @tabble_tab_header_w;
+    right: 0;
   }
 }
 
@@ -144,7 +137,7 @@
   }
 
   > div {
-    right: @tabble_tab_header_w;
+    left: 0;
   }
 }
 
