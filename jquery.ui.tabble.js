@@ -20,8 +20,17 @@
 
     _processTabble: function() {
       var that = this;
+      this.$tbody = this.element.find('> tbody');
+      if (! this.$tbody || ! this.$tbody.length){
+        this.$tbody = this.element;
+      }
 
-      this.rows = this.element.find("> tbody > tr");
+      var $rows = this.$tbody.find("> tr");
+      this.rows = {
+        top: $rows[0],
+        center: $rows[1],
+        bottom: $rows[2]
+      };
 
       this.cells = [];
       $.each(this.rows, function(pos, row){
@@ -45,7 +54,7 @@
 
       this.tabs = {};
       $.each(this.tabCells, function(pos, tabCell){
-        $(tabCell).addClass('ui-tabble-tabcell '+ pos);
+        $(tabCell).addClass('ui-tabble-tabcell ' + pos);
 
         // @TODO
         // Break this out
@@ -54,6 +63,9 @@
         // Setting lefts/rights.
         var $tab = $(tabCell).find('> div').eq(0);
         if (! $tab){
+          if (pos == 'top' || pos == 'bottom'){
+            $(that.rows[pos]).addClass('empty');
+          }
           return;
         }
 
@@ -70,22 +82,28 @@
 
         // Set corners.
         var hWidth = $h.outerHeight(true);
-        if (pos == 'left' || pos == 'right'){
-          $h.addClass('ui-corner-top');
-        }
-        else if (pos == 'top' || pos == 'bottom'){
-          $h.addClass('ui-corner-' + pos);
+        $tab.addClass('ui-corner-' + pos);
+        if (pos == 'top' || pos == 'bottom'){
+          $(that.rows[pos]).removeClass('empty');
         }
       });
 
       // Assign events to tab headers.
       // @TODO: change this to be more like typical jquery.ui event handling
-      $(this.element).on('click', '.ui-tabble-tab > h3', function(e){
+      $(this.$tbody).on('click', '.ui-tabble-tab > h3', function(e){
         var $h3 = $(e.target);
         var $tab = $h3.parent();
         var pos = $tab.attr('pos');
         that.toggleTab({pos: pos});
 			})
+
+      // Mark empty top/bottom rows.
+      $.each(['top', 'bottom'], function(i, pos){
+        var $tab = that.tabs[pos];
+        if (! $tab.length){
+          $(that.rows[pos]).addClass('empty');
+        }
+      });
 
       this.resize();
     },
@@ -93,32 +111,84 @@
     resize: function(){
       var that = this;
 
-      // Resize cells.
+      // Resize cells and reposition contents.
       $.each(this.tabCells, function(pos, cell){
+
         // Ignore center.
         if (pos == 'center'){
           return;
         }
         var $cell = $(cell);
+        var expanded = $cell.hasClass('expanded');
         var targetWidth = 0;
         var $tab = that.tabs[pos];
         var $h;
         var $b;
+        var hWidth = 0;
+        var bWidth = 0;
+
         if ($tab){
           $h = $tab.find(' > h3').eq(0);
           $b = $tab.find(' > div').eq(0);
         }
+
         if ($h){
-          targetWidth += $h.outerHeight();
+          hWidth = $h.outerHeight();
+          targetWidth += hWidth;
+          if (pos == 'left' || pos == 'top'){
+            $h.css(pos, 0);
+          }
+          else if (pos == 'right'){
+            if (expanded){
+              $h.css('right', 0);
+            }
+            else{
+              $h.css('left', 0);
+            }
+          }
+          else if (pos == 'bottom'){
+            if (expanded){
+              $h.css('bottom', 0);
+            }
+            else{
+              $h.css('top', 0);
+            }
+          }
         }
-        if ($cell.hasClass('expanded')){
-          if ($b){
-            if (pos == 'left' || pos == 'right'){
-              targetWidth += $b.outerWidth();
+
+
+        if ($b){
+          if (pos == 'left' || pos == 'right'){
+            bWidth = $b.outerWidth();
+            if (pos == 'left'){
+              $b.css('left', hWidth);
             }
-            else if (pos == 'top' || pos == 'bottom'){
-              targetWidth += $b.outerHeight();
+            else if (pos == 'right'){
+              if (expanded){
+                $b.css('left', 0);
+              }
+              else{
+                $b.css('left', -bWidth);
+              }
             }
+          }
+          else if (pos == 'top' || pos == 'bottom'){
+            bWidth += $b.outerHeight();
+            if (pos == 'top'){
+              $b.css('top', hWidth);
+            }
+            else if (pos == 'bottom'){
+              if (expanded){
+                $b.css('top', 0);
+              }
+              else{
+                $b.css('top', -bWidth);
+              }
+            }
+          }
+
+          if ($cell.hasClass('expanded')){
+            targetWidth += bWidth;
           }
         }
 
@@ -211,16 +281,18 @@
       ));
 
       if (pos == 'right' || pos == 'bottom'){
-        var $tab = $cell.find('> div').eq(0);
-        var $h3 = $tab.find('> h3').eq(0);
-        var h3_a_opts;
         if (pos == 'right'){
-          h3_a_opts = {'left': parseInt($h3.css('left'),10) + delta};
+          anim_pos = 'left';
         }
         else if (pos == 'bottom'){
-          h3_a_opts = {'top': parseInt($h3.css('top'),10) + delta};
+          anim_pos = 'top';
         }
-        deferreds.push($h3.animate(h3_a_opts));
+        var h_a_opts = {};
+        var b_a_opts = {};
+        h_a_opts[anim_pos] = parseInt($h.css(anim_pos),10) + delta;
+        b_a_opts[anim_pos] = parseInt($b.css(anim_pos), 10) + delta;
+        deferreds.push($h.animate(h_a_opts));
+        deferreds.push($b.animate(b_a_opts));
       }
 
       if (this.options.stretchTable){

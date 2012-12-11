@@ -6,7 +6,7 @@
 @tabble_tab_r: 7px;
 @tabble_vtab_body_w: 200px;
 @tabble_htab_body_h: 225px;
-@tabble_tab_bgcolor: lightgreen;
+@tabble_tab_bgcolor: #bcf;
 
 .ui-tabble {
   html, body, div, span, applet, object, iframe,
@@ -40,6 +40,10 @@
 
   > tbody > tr, > tr{
 
+    &.empty {
+      height: 0;
+    }
+
     > td {
       position: relative;
     }
@@ -54,7 +58,7 @@
   width: auto;
   height: auto;
   border-style: solid;
-  border-color: @tabble_tab_bgcolor;
+  border-color: #ddd;
   border-width: thin;
 }
 
@@ -65,6 +69,7 @@
   right: 0;
   bottom: 0;
   left: 0;
+  background-color: @tabble_tab_bgcolor;
 
   & > h3 {
     position: absolute;
@@ -72,7 +77,6 @@
     top: 0;
     left: 0;
     height: @tabble_tab_header_w;
-    background-color: @tabble_tab_bgcolor;
     text-align: center;
     cursor: pointer;
   }
@@ -80,9 +84,6 @@
   & > div {
     z-index: 1;
     position: absolute;
-    border-style: solid;
-    border-color: @tabble_tab_bgcolor;
-    border-width: thin;
   }
   
 }
