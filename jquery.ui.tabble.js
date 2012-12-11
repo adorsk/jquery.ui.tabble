@@ -1,6 +1,3 @@
-ASFASDF
-@TODO! Need to set widths on first row for fixed-table layout.
-auto table layouts don't respect fixed widths...
 (function( $, undefined ) {
 
   $.widget( "ui.tabble", {
@@ -31,6 +28,12 @@ auto table layouts don't respect fixed widths...
         var cells = $(row).find('> td');
         that.cells.push(cells);
       });
+
+      this.widthCells = {
+        left: this.cells[0][0],
+        center: this.cells[0][1],
+        right: this.cells[0][2]
+      };
 
       this.tabCells = {
         top: this.cells[0][1],
@@ -65,23 +68,13 @@ auto table layouts don't respect fixed widths...
         $h = $tab.find('> h3').eq(0);
         $b = $tab.find('> div').eq(0);
 
-        // Set corners and initial positions and sizes.
+        // Set corners.
         var hWidth = $h.outerHeight(true);
         if (pos == 'left' || pos == 'right'){
-          $cell.width(hWidth);
           $h.addClass('ui-corner-top');
-          $h.css('left', 0);
         }
         else if (pos == 'top' || pos == 'bottom'){
-          $cell.height(hWidth);
           $h.addClass('ui-corner-' + pos);
-          $h.css('top', 0);
-          if (pos == 'top'){
-            $b.css('top', hWidth);
-          }
-          else if (pos == 'bottom'){
-            $b.css('top', 0);
-          }
         }
       });
 
@@ -99,8 +92,10 @@ auto table layouts don't respect fixed widths...
 
     resize: function(){
       var that = this;
+
       // Resize cells.
       $.each(this.tabCells, function(pos, cell){
+        // Ignore center.
         if (pos == 'center'){
           return;
         }
@@ -127,8 +122,11 @@ auto table layouts don't respect fixed widths...
           }
         }
 
+        // We resize the cells in the top row,
+        // as these control width in a fixed-layout table.
         if (pos == 'left' || pos == 'right'){
-          $cell.width(targetWidth);
+          var $widthCell = $(that.widthCells[pos]);
+          $widthCell.width(targetWidth);
         }
         else if (pos == 'top' || pos == 'bottom'){
           $cell.height(targetWidth);
@@ -167,13 +165,18 @@ auto table layouts don't respect fixed widths...
 
       var dim;
       var bWidth;
+      var $widthCell;
       if (pos == 'left' || pos == 'right'){
         dim = 'width';
         bWidth = $b.outerWidth(true);
+        // Use the cells in the top row to set width,
+        // per fixed-layout table.
+        $widthCell = $(this.widthCells[pos]);
       }
       else if (pos == 'bottom' || pos == 'top'){
         dim = 'height';
         bWidth = $b.outerHeight(true);
+        $widthCell = $cell;
       }
       var hWidth = $h.outerHeight(true);
 
@@ -192,7 +195,7 @@ auto table layouts don't respect fixed widths...
 
       var cell_a_opts = {};
       cell_a_opts[dim] = targetWidth;
-      deferreds.push($cell.animate(
+      deferreds.push($widthCell.animate(
           cell_a_opts,
           {
             complete: function(){
