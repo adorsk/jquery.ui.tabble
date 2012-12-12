@@ -299,7 +299,7 @@
       if (this.options.stretchTable){
         var $table = $(this.element);
         var table_a_opts = {};
-        table_a_opts[dim] = parseInt($table.css(dim),10) + delta;
+        table_a_opts[dim] = $table[dim]() + delta;
         deferreds.push($table.animate(table_a_opts));
       }
 
