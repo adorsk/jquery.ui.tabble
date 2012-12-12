@@ -129,7 +129,6 @@
         var $b;
         var hWidth = 0;
         var bWidth = 0;
-        var wFudge = 2;
 
         if ($tab){
           $h = $tab.find(' > h3').eq(0);
@@ -154,12 +153,11 @@
           }
         }
 
-
         if ($b){
           if (pos == 'left' || pos == 'right'){
             bWidth = Math.ceil($b.outerWidth(true));
             if (pos == 'left'){
-              $b.css('left', hWidth + wFudge);
+              $b.css('left', hWidth);
             }
             else if (pos == 'right'){
               if (expanded){
@@ -174,7 +172,7 @@
           else if (pos == 'top' || pos == 'bottom'){
             bWidth += Math.ceil($b.outerHeight(true));
             if (pos == 'top'){
-              $b.css('top', hWidth + wFudge);
+              $b.css('top', hWidth);
             }
             else if (pos == 'bottom'){
               if (expanded){
