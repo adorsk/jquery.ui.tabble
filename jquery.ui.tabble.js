@@ -133,7 +133,7 @@
         }
 
         if ($h){
-          hWidth = $h.outerHeight();
+          hWidth = $h.outerHeight(true);
           targetWidth += hWidth;
           if (pos == 'left' || pos == 'top'){
             $h.css(pos, 0);
@@ -159,7 +159,7 @@
 
         if ($b){
           if (pos == 'left' || pos == 'right'){
-            bWidth = $b.outerWidth();
+            bWidth = $b.outerWidth(true);
             if (pos == 'left'){
               $b.css('left', hWidth);
             }
@@ -173,7 +173,7 @@
             }
           }
           else if (pos == 'top' || pos == 'bottom'){
-            bWidth += $b.outerHeight();
+            bWidth += $b.outerHeight(true);
             if (pos == 'top'){
               $b.css('top', hWidth);
             }
