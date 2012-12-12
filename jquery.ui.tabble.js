@@ -262,7 +262,6 @@
       else{
         targetWidth = fullWidth;
       }
-      console.log(delta, targetWidth, hWidth, bWidth);
 
       var cell_a_opts = {};
       cell_a_opts[dim] = targetWidth;
