@@ -91,8 +91,8 @@
       // Assign events to tab headers.
       // @TODO: change this to be more like typical jquery.ui event handling
       $(this.$tbody).on('click', '.ui-tabble-tab > h3', function(e){
-        var $h3 = $(e.target);
-        var $tab = $h3.parent();
+        var $h = $(e.currentTarget);
+        var $tab = $h.parent();
         var pos = $tab.attr('pos');
         that.toggleTab({pos: pos});
 			})
