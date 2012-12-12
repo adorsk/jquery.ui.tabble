@@ -143,18 +143,12 @@
             $h.css(pos, 0);
           }
           else if (pos == 'right'){
-            if (expanded){
-              $h.css('right', 0);
-            }
-            else{
+            if (! expanded){
               $h.css('left', 0);
             }
           }
           else if (pos == 'bottom'){
-            if (expanded){
-              $h.css('bottom', 0);
-            }
-            else{
+            if (! expanded){
               $h.css('top', 0);
             }
           }
@@ -170,6 +164,7 @@
             else if (pos == 'right'){
               if (expanded){
                 $b.css('left', 0);
+                $h.css('left', bWidth);
               }
               else{
                 $b.css('left', -bWidth);
@@ -184,6 +179,7 @@
             else if (pos == 'bottom'){
               if (expanded){
                 $b.css('top', 0);
+                $h.css('top', bWidth);
               }
               else{
                 $b.css('top', -bWidth);
