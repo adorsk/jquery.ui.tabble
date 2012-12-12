@@ -84,7 +84,7 @@
         $b = $tab.find('> div').eq(0);
 
         // Set corners.
-        var hWidth = $h.outerHeight(true);
+        var hWidth = Math.ceil($h.outerHeight(true));
         $tab.addClass('ui-corner-' + pos);
         if (pos == 'top' || pos == 'bottom'){
           $(that.rows[pos]).removeClass('empty');
@@ -129,6 +129,7 @@
         var $b;
         var hWidth = 0;
         var bWidth = 0;
+        var wFudge = 2;
 
         if ($tab){
           $h = $tab.find(' > h3').eq(0);
@@ -136,7 +137,7 @@
         }
 
         if ($h){
-          hWidth = $h.outerHeight(true);
+          hWidth = Math.ceil($h.outerHeight(true));
           targetWidth += hWidth;
           if (pos == 'left' || pos == 'top'){
             $h.css(pos, 0);
@@ -162,9 +163,9 @@
 
         if ($b){
           if (pos == 'left' || pos == 'right'){
-            bWidth = $b.outerWidth(true);
+            bWidth = Math.ceil($b.outerWidth(true));
             if (pos == 'left'){
-              $b.css('left', hWidth);
+              $b.css('left', hWidth + wFudge);
             }
             else if (pos == 'right'){
               if (expanded){
@@ -176,9 +177,9 @@
             }
           }
           else if (pos == 'top' || pos == 'bottom'){
-            bWidth += $b.outerHeight(true);
+            bWidth += Math.ceil($b.outerHeight(true));
             if (pos == 'top'){
-              $b.css('top', hWidth);
+              $b.css('top', hWidth + wFudge);
             }
             else if (pos == 'bottom'){
               if (expanded){
@@ -242,17 +243,17 @@
       var $widthCell;
       if (pos == 'left' || pos == 'right'){
         dim = 'width';
-        bWidth = $b.outerWidth(true);
+        bWidth = Math.ceil($b.outerWidth(true));
         // Use the cells in the top row to set width,
         // per fixed-layout table.
         $widthCell = $(this.widthCells[pos]);
       }
       else if (pos == 'bottom' || pos == 'top'){
         dim = 'height';
-        bWidth = $b.outerHeight(true);
+        bWidth = Math.ceil($b.outerHeight(true));
         $widthCell = $cell;
       }
-      var hWidth = $h.outerHeight(true);
+      var hWidth = Math.ceil($h.outerHeight(true));
 
       var expanded = $cell.hasClass('expanded');
 
