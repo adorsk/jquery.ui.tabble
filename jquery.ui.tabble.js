@@ -192,9 +192,10 @@
           }
         }
 
-        // We resize the cells in the top row,
-        // as these control width in a fixed-layout table.
+
         if (pos == 'left' || pos == 'right'){
+          // We resize the cells in the top row,
+          // as these control width in a fixed-layout table.
           var $widthCell = $(that.widthCells[pos]);
           $widthCell.width(targetWidth);
         }
