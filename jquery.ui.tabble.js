@@ -56,6 +56,9 @@
       $.each(this.tabCells, function(pos, tabCell){
         $(tabCell).addClass('ui-tabble-tabcell ' + pos);
 
+        if (pos == 'center'){
+          return;
+        }
         // @TODO
         // Break this out
         // into a set tab function here.
