@@ -217,9 +217,10 @@
       // Resize vertical tabs.
       $.each(this.tabs, function(pos, tab){
         if (pos == 'left' || pos == 'right'){
-          $cell = $(tab).parent();
-          $h3 = $(tab).find('> h3');
-          $h3.width($cell.innerHeight());
+          var $tab = $(tab);
+          //var $cell = $tab.parent();
+          $h3 = $tab.find('> h3');
+          $h3.outerWidth($tab.innerHeight());
         }
       });
     },

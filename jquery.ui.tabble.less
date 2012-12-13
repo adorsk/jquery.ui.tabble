@@ -24,15 +24,10 @@
 
   .ui-tabble-arrow {
     display: inline-block;
-    position: relative;
-    width: 1em;
-    height: 1em;
+    margin-right: .5em;
     > .contracted, > .expanded{
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      text-align: center;
+      padding: 1px 6px;
     }
     > .contracted{
       display: block;
@@ -70,13 +65,12 @@
 
   & > h3 {
     position: absolute;
+    display: inline-block;
     z-index: 2;
     top: 0;
     left: 0;
     text-align: center;
     cursor: pointer;
-    margin-top: 0;
-    margin-bottom: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
