@@ -21,6 +21,37 @@
 
 .ui-tabble-tabcell{
   overflow: hidden;
+
+  .ui-tabble-arrow {
+    display: inline-block;
+    position: relative;
+    width: 1em;
+    height: 1em;
+    > .contracted, > .expanded{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    > .contracted{
+      display: block;
+    }
+    > .expanded{
+      display: none;
+    }
+  }
+}
+
+.ui-tabble-tabcell.expanded{
+  .ui-tabble-arrow{
+    > .contracted{
+      display: none;
+    }
+    > .expanded{
+      display: block;
+    }
+  }
 }
 
 .ui-tabble-tabcell.center{
@@ -55,8 +86,7 @@
     z-index: 1;
     position: absolute;
     overflow: hidden;
-  }
-  
+  } 
 }
 
 .ui-tabble-tab.left, .ui-tabble-tab.right {

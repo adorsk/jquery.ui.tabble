@@ -5,6 +5,7 @@
     delay: 300,
     options: {
       stretchTable: false,
+      addToggleArrows: true
     },
 
     _create: function() {
@@ -82,6 +83,17 @@
         // Get header and body
         $h = $tab.find('> h3').eq(0);
         $b = $tab.find('> div').eq(0);
+
+        // Prepend toggle arrow to header.
+        if (that.options.addToggleArrows){
+          var expanded = '\u25BC';
+          var contracted = '\u25B2';
+          if (pos == 'bottom'){
+            expanded = '\u25B2';
+            contracted = '\u25BC';
+          }
+          $h.prepend('<span class="ui-tabble-arrow"><span class="expanded">' + expanded + '</span><span class="contracted">' + contracted + '</span></span>');
+        }
 
         // Set corners.
         var hWidth = Math.ceil($h.outerHeight(true));
