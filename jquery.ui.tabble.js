@@ -314,7 +314,11 @@
         deferreds.push($table.animate(table_a_opts));
       }
 
-      return $.when.apply($, deferreds);
+      var promise = $.when.apply($, deferreds);
+      promise.then(function(){
+        that.resize();
+      });
+      return promise;
     },
 
     _capitalize: function(s){
