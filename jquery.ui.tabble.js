@@ -5,7 +5,8 @@
     delay: 300,
     options: {
       stretchTable: false,
-      addToggleArrows: true
+      addToggleArrows: true,
+      invertToggleArrows: false
     },
 
     _create: function() {
@@ -91,6 +92,11 @@
           if (pos == 'bottom'){
             expanded = '\u25B2';
             contracted = '\u25BC';
+          }
+          if (that.options.invertToggleArrows){
+            var tmpEx = expanded;
+            expanded = contracted;
+            contracted = tmpEx;
           }
           $h.prepend('<span class="ui-tabble-arrow"><span class="expanded">' + expanded + '</span><span class="contracted">' + contracted + '</span></span>');
         }
