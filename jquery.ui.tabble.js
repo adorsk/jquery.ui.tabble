@@ -10,7 +10,7 @@
     },
 
     _create: function() {
-      var that = this,
+      var _this = this,
       options = this.options;
 
       this.element.addClass(
@@ -21,23 +21,23 @@
     },
 
     _processTabble: function() {
-      var that = this;
+      var _this = this;
       this.$tbody = this.element.find('> tbody');
       if (! this.$tbody || ! this.$tbody.length){
         this.$tbody = this.element;
       }
 
       var $rows = this.$tbody.find("> tr");
-      this.rows = {
-        top: $rows[0],
-        center: $rows[1],
-        bottom: $rows[2]
+      this.$rows = {
+        top: $rows.eq(0),
+        center: $rows.eq(1),
+        bottom: $rows.eq(2)
       };
 
       this.cells = [];
-      $.each(this.rows, function(pos, row){
-        var cells = $(row).find('> td');
-        that.cells.push(cells);
+      $.each(this.$rows, function(pos, $row){
+        var cells = $row.find('> td');
+        _this.cells.push(cells);
       });
 
       this.widthCells = {
@@ -69,14 +69,14 @@
         var $tab = $(tabCell).find('> div').eq(0);
         if (! $tab){
           if (pos == 'top' || pos == 'bottom'){
-            $(that.rows[pos]).addClass('empty');
+            $(_this.$rows[pos]).addClass('empty');
           }
           return;
         }
 
         $tab.addClass("ui-tabble-tab " + pos);
         $tab.attr('pos', pos);
-        that.tabs[pos] = $tab;
+        _this.tabs[pos] = $tab;
 
         // Get the cell.
         $cell = $tab.parent();
@@ -86,14 +86,14 @@
         $b = $tab.find('> div').eq(0);
 
         // Prepend toggle arrow to header.
-        if (that.options.addToggleArrows){
+        if (_this.options.addToggleArrows){
           var expanded = '\u25BC';
           var contracted = '\u25B2';
           if (pos == 'bottom'){
             expanded = '\u25B2';
             contracted = '\u25BC';
           }
-          if (that.options.invertToggleArrows){
+          if (_this.options.invertToggleArrows){
             var tmpEx = expanded;
             expanded = contracted;
             contracted = tmpEx;
@@ -105,7 +105,7 @@
         var hWidth = Math.ceil($h.outerHeight(true));
         $tab.addClass('ui-corner-' + pos);
         if (pos == 'top' || pos == 'bottom'){
-          $(that.rows[pos]).removeClass('empty');
+          _this.$rows[pos].removeClass('empty');
         }
       });
 
@@ -115,14 +115,14 @@
         var $h = $(e.currentTarget);
         var $tab = $h.parent();
         var pos = $tab.attr('pos');
-        that.toggleTab({pos: pos});
+        _this.toggleTab({pos: pos});
 			})
 
       // Mark empty top/bottom rows.
       $.each(['top', 'bottom'], function(i, pos){
-        var $tab = that.tabs[pos];
+        var $tab = _this.tabs[pos];
         if (! $tab.length){
-          $(that.rows[pos]).addClass('empty');
+          _this.$rows[pos].addClass('empty');
         }
       });
 
@@ -130,7 +130,7 @@
     },
 
     resize: function(){
-      var that = this;
+      var _this = this;
 
       // Resize cells and reposition contents.
       $.each(this.tabCells, function(pos, cell){
@@ -142,7 +142,28 @@
         var $cell = $(cell);
         var expanded = $cell.hasClass('expanded');
         var targetWidth = 0;
-        var $tab = that.tabs[pos];
+        var $tab = _this.tabs[pos];
+
+        var $widthCell;
+        var dim;
+        if (pos == 'left' || pos == 'right'){
+          dim = 'width';
+          $widthCell = $(_this.widthCells[pos]);
+        }
+        else if (pos == 'top' || pos == 'bottom'){
+          dim = 'height';
+          $widthCell = $cell;
+        }
+
+        // If no tab, set width cell to 0 width and finish.
+        if (! $tab){
+          $widthCell.css(dim, 0);
+          if (pos == 'top' || pos == 'bottom'){
+            _this.$rows[pos].addClass('empty');
+          }
+          return;
+        }
+
         var $h;
         var $b;
         var hWidth = 0;
@@ -208,23 +229,14 @@
           }
         }
 
-
-        if (pos == 'left' || pos == 'right'){
-          // We resize the cells in the top row,
-          // as these control width in a fixed-layout table.
-          var $widthCell = $(that.widthCells[pos]);
-          $widthCell.width(targetWidth);
-        }
-        else if (pos == 'top' || pos == 'bottom'){
-          $cell.height(targetWidth);
-        }
+        // Set width on width cell.
+        $widthCell[dim](targetWidth);
       });
 
       // Resize vertical tabs.
       $.each(this.tabs, function(pos, tab){
         if (pos == 'left' || pos == 'right'){
           var $tab = $(tab);
-          //var $cell = $tab.parent();
           $h3 = $tab.find('> h3');
           $h3.outerWidth($tab.innerHeight());
         }
@@ -235,8 +247,67 @@
       this.element.removeClass( "ui-tabble ui-widget ui-widget-content ui-corner-all");
     },
 
+    showTab: function(opts){
+      // Set tab display to visible and resize.
+      opts = $.extend({}, opts);
+      var pos = opts.pos;
+      var $tab = $(this.tabs[pos]);
+      if ($tab){
+        $tab.css('display', '');
+      }
+      this.resize();
+    },
+
+    hideTab: function(opts){
+      // Set tab display to none and width 0.
+      opts = $.extend({}, opts);
+      var pos = opts.pos;
+      var $tab = $(this.tabs[pos]);
+      if ($tab){
+        $tab.css('display', 'none');
+      }
+      var dim;
+      var $widthCell;
+      if (pos == 'left' || pos == 'right'){
+        dim = 'width';
+        $widthCell = $(this.widthCells[pos]);
+      }
+      else if (pos == 'bottom' || pos == 'top'){
+        dim = 'height';
+        $widthCell = $(this.tabCells[pos]);
+      }
+      $widthCell.css(dim, 0);
+    },
+
+    removeTab: function(opts){
+      // Remove a tab.
+      var _this = this;
+      opts = $.extend({
+        animate: true
+      }, opts);
+      var pos = opts.pos;
+      var $tab = $(this.tabs[pos]);
+      // @TODO: use deferreds here for callbacks.
+      if ($tab){
+        if (opts.animate){
+          $tab.fadeOut({
+            complete: function(){
+              $tab.remove();
+              delete _this.tabs[pos];
+              _this.resize();
+            }
+          });
+        }
+        else{
+          $tab.remove();
+          delete _this.tabs[pos];
+          _this.resize();
+        }
+      }
+    },
+
     toggleTab: function(opts){
-      var that = this;
+      var _this = this;
       opts = $.extend({}, opts);
 
       var deferreds = [];
@@ -322,7 +393,7 @@
 
       var promise = $.when.apply($, deferreds);
       promise.then(function(){
-        that.resize();
+        _this.resize();
       });
       return promise;
     },
