@@ -256,24 +256,28 @@
         showHide: 'show'
       }, opts);
       var pos = opts.pos;
+      var $tab = $(this.tabs[pos]);
 
       var targetDisplay;
       var animFn;
       if (opts.showHide == 'show'){
         targetDisplay = '';
-        animFn = 'fadeIn';
+        //animFn = 'fadeIn';
+        animFn = 'slideDown';
+        $tab.removeClass('hidden');
       }
       else if (opts.showHide == 'hide'){
         targetDisplay = 'none';
-        animFn = 'fadeOut';
+        //animFn = 'fadeOut';
+        animFn = 'slideUp';
+        $tab.addClass('hidden');
       }
-      var $tab = $(this.tabs[pos]);
       if ($tab){
         if (opts.showHide == 'show'){
           $tab.css('visibility', 'hidden');
-          $tab.css('display', '');
+          $tab.show();
           _this.resize();
-          $tab.css('display', 'none');
+          $tab.hide();
           $tab.css('visibility', '');
         }
         if (opts.animate){
