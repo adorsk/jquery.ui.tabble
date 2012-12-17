@@ -155,8 +155,9 @@
           $widthCell = $cell;
         }
 
-        // If no tab, set width cell to 0 width and finish.
-        if (! $tab){
+        // If no tab or tab display is none,
+        // set width cell to 0 width and finish.
+        if (! $tab || $tab.css('display') == 'none'){
           $widthCell.css(dim, 0);
           if (pos == 'top' || pos == 'bottom'){
             _this.$rows[pos].addClass('empty');
@@ -247,36 +248,46 @@
       this.element.removeClass( "ui-tabble ui-widget ui-widget-content ui-corner-all");
     },
 
-    showTab: function(opts){
-      // Set tab display to visible and resize.
-      opts = $.extend({}, opts);
+    showHideTab: function(opts){
+      // Set tab display.
+      var _this = this;
+      opts = $.extend({
+        animate: true,
+        showHide: 'show'
+      }, opts);
       var pos = opts.pos;
-      var $tab = $(this.tabs[pos]);
-      if ($tab){
-        $tab.css('display', '');
-      }
-      this.resize();
-    },
 
-    hideTab: function(opts){
-      // Set tab display to none and width 0.
-      opts = $.extend({}, opts);
-      var pos = opts.pos;
+      var targetDisplay;
+      var animFn;
+      if (opts.showHide == 'show'){
+        targetDisplay = '';
+        animFn = 'fadeIn';
+      }
+      else if (opts.showHide == 'hide'){
+        targetDisplay = 'none';
+        animFn = 'fadeOut';
+      }
       var $tab = $(this.tabs[pos]);
       if ($tab){
-        $tab.css('display', 'none');
+        if (opts.showHide == 'show'){
+          $tab.css('visibility', 'hidden');
+          $tab.css('display', '');
+          _this.resize();
+          $tab.css('display', 'none');
+          $tab.css('visibility', '');
+        }
+        if (opts.animate){
+          $tab[animFn]({
+            complete: function(){
+              _this.resize();
+            }
+          });
+        }
+        else{
+          $tab.css('display', targetDisplay);
+          this.resize();
+        }
       }
-      var dim;
-      var $widthCell;
-      if (pos == 'left' || pos == 'right'){
-        dim = 'width';
-        $widthCell = $(this.widthCells[pos]);
-      }
-      else if (pos == 'bottom' || pos == 'top'){
-        dim = 'height';
-        $widthCell = $(this.tabCells[pos]);
-      }
-      $widthCell.css(dim, 0);
     },
 
     removeTab: function(opts){
