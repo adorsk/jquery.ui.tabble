@@ -2,7 +2,6 @@
 
   $.widget( "ui.tabble", {
     version: "@VERSION",
-    delay: 300,
     options: {
       stretchTable: false,
       addToggleArrows: true,
@@ -242,6 +241,8 @@
           $h3.outerWidth($tab.innerHeight());
         }
       });
+
+      this._trigger('resize');
     },
 
     _destroy: function() {
