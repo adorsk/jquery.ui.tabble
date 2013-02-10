@@ -5,7 +5,8 @@
     options: {
       stretchTable: false,
       addToggleArrows: true,
-      invertToggleArrows: false
+      invertToggleArrows: false,
+      alsoResize: null,
     },
 
     _create: function() {
@@ -400,11 +401,21 @@
         deferreds.push($b.animate(b_a_opts));
       }
 
+      var $alsoAnimate = $();
       if (this.options.stretchTable){
         var $table = $(this.element);
-        var table_a_opts = {};
-        table_a_opts[dim] = $table[dim]() + delta;
-        deferreds.push($table.animate(table_a_opts));
+        $alsoAnimate = $alsoAnimate.add($table);
+      }
+      if (this.options.alsoResize){
+        $alsoAnimate = $alsoAnimate.add($(this.options.alsoResize));
+      }
+      if ($alsoAnimate.length){
+        $alsoAnimate.each(function(i, el){
+          var $el = $(el);
+          var anim_opts = {};
+          anim_opts[dim] = $el[dim]() + delta;
+          deferreds.push($el.animate(anim_opts));
+        });
       }
 
       var promise = $.when.apply($, deferreds);
