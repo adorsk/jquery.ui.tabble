@@ -85,6 +85,11 @@
         $h = $tab.find('> h3').eq(0);
         $b = $tab.find('> div').eq(0);
 
+        // Listen for click events on header.
+        $h.on('click', function(e){
+          _this.toggleTab({pos: pos});
+        });
+
         // Prepend toggle arrow to header.
         if (_this.options.addToggleArrows){
           var expanded = '\u25BC';
@@ -108,15 +113,6 @@
           _this.$rows[pos].removeClass('empty');
         }
       });
-
-      // Assign events to tab headers.
-      // @TODO: change this to be more like typical jquery.ui event handling
-      $(this.$tbody).on('click', '.ui-tabble-tab > h3', function(e){
-        var $h = $(e.currentTarget);
-        var $tab = $h.parent();
-        var pos = $tab.attr('pos');
-        _this.toggleTab({pos: pos});
-			})
 
       // Mark empty top/bottom rows.
       $.each(['top', 'bottom'], function(i, pos){
